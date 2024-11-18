@@ -2,10 +2,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
+int main(int argc, char**argv) {
     int pid;
     int worker_count_target = 5;
     int status;
+
+    printf("The first argument is %s\n", argv[0]);
+    printf("The second argument is %s\n", argv[1]);
+
+    worker_count_target = atoi(argv[1]);
+
+    if (argc !=2) {
+        printf("Error: call the program with the number of workers\n");
+        exit(-1);
+    }
 
     for(int worker_count = 0; worker_count < worker_count_target ; worker_count++) {
         pid = fork();
@@ -18,7 +28,7 @@ int main() {
                     worker_count, 
                     getpid(), 
                     getppid());
-            sleep(5-worker_count);
+            sleep(worker_count_target-worker_count);
             printf("Worker #%d exiting...\n", worker_count);
             exit(0);
         } 
